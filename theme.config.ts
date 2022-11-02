@@ -1,6 +1,30 @@
-import {ThemeOptions} from '@mui/material/styles'
+import {createTheme, ThemeOptions} from '@mui/material/styles'
 
-const lightTheme : ThemeOptions = {
+declare module '@mui/material/styles' {
+  interface BreakpointOverrides {
+    xs: true
+    sm: false // removes the `xs` breakpoint
+    md: true
+    lg: true
+    xl: false // removes the `xl` breakpoint
+  }
+}
+declare module '@mui/material/styles/createPalette' {
+  interface Palette {
+    ruby: Palette['primary']
+    jade: Palette['primary']
+    smoke: Palette['primary']
+    canvas: Palette['primary']
+  }
+  interface PaletteOptions {
+    ruby: PaletteOptions['primary']
+    jade: PaletteOptions['primary']
+    smoke: PaletteOptions['primary']
+    canvas: PaletteOptions['primary']
+  }
+}
+
+const light = {
   palette: {
     mode: 'light',
     primary: {
@@ -9,7 +33,22 @@ const lightTheme : ThemeOptions = {
       dark: '#0448CA',
     },
     secondary: {
-      main: '#f50057',
+      main: '#DB7048',
+    },
+    ruby: {
+      main: '#DC496C',
+    },
+    jade: {
+      light: '#626262',
+      dark: '#222222',
+    },
+    smoke: {
+      light: '#E1E1E1',
+      dark: '#9F9F9F',
+    },
+    canvas: {
+      light: '#FAFAFA',
+      dark: '#FAFAFA',
     },
     success: {
       main: '#0448CA',
@@ -26,20 +65,17 @@ const lightTheme : ThemeOptions = {
     },
     divider: '#E1E1E1',
   },
-  spacing: [0, 4, 8, 16, 24, 32, 48, 64, 96],
+  spacing: [0, 4, 8, 16, 24, 32, 48, 64, 96, 112],
   breakpoints: {
     values: {
       xs: 0,
-      sm: 600,
-      md: 900,
-      lg: 1200,
-      xl: 1536,
+      md: 600,
+      lg: 960,
     },
   },
   typography: {
     fontFamily: [
       'YakuHanJP',
-      'Noto Sans',
       'Roboto',
       'SF Pro',
       'Hiragino Kaku Gothic ProN',
@@ -48,79 +84,62 @@ const lightTheme : ThemeOptions = {
       'sans-serif',
     ].join(','),
     subtitle1: {
-      color: '#626262'
+      color: '#626262',
+      lineHeight: '1.5em',
+      letterSpacing: '0.05em'
     },
     subtitle2: {
-      color: '#626262'
+      color: '#626262',
+      lineHeight: '1.5em',
+      letterSpacing: '0.05em'
     },
     caption: {
-      color: '#626262'
+      color: '#626262',
+      lineHeight: '1.5em',
+      letterSpacing: '0.05em'
+    },
+    body1: {
+      lineHeight: '1.5em',
+      letterSpacing: '0.05em'
     },
     body2: {
-      color: '#222'
+      lineHeight: '1.5em',
+      letterSpacing:  '0.05em'
     },
+    h5: {
+      lineHeight: '1.5em',
+      letterSpacing:  '0.05em'
+    },
+    h6: {
+      lineHeight: '1.5em',
+      letterSpacing:  '0.05em'
+    }
   },
   components: {
-    MuiButton: {
-      styleOverrides: {
-        root: {
-          padding: '8px 16px',
-          fontSize: '16px',
-        }
-      },
-      variants: [
-        {
-          props: { variant: 'contained' },
-          style: {
-            background: '#222222',
-            color: '#fff',
-            boxShadow: 'none',
-            '&:hover': {
-              background: '#626262',
-            },
-            '&:focus': {
-              background: '#222222',
-            },
-            '&:disabled': {
-              background: '#222222B3',
-              color: '#FFFFFF73',
-            },
-          },
-        },
-        {
-          props: { variant: 'outlined' },
-          style: {
-            background: '#fff',
-            borderColor: '#9F9F9F',
-            color: '#444444',
-            fontSize: '14px',
-            boxShadow: 'none',
-            '&:hover': {
-              background: '#FAFAFA',
-              borderColor: '#9F9F9F',
-              color: '#444444',
-            },
-            '&:focus': {
-              background: '#fff',
-              borderColor: '#9F9F9F',
-              color: '#444444',
-            },
-            '&:disabled': {},
-          },
-        },
-      ],
-    },
     MuiOutlinedInput: {
       styleOverrides: {
         input: {
           padding: '12.5px 14px'
         }
       }
-    }
+    },
+    MuiAppBar: {
+      styleOverrides: {
+        root: `
+          &.MuiPaper-root {
+            box-shadow:rgb(0 0 0 / 8%) 0px 1px 12px;
+          }`,
+      },
+    },
   },
 }
 
-export default Object.assign({
-  light: lightTheme,
-  dark: {}
-})
+export const rateColor = '#faaf00'
+export default Object.assign(
+  {},
+  {
+    light,
+    dark: {},
+  }
+)
+export const theme = createTheme(light as ThemeOptions)

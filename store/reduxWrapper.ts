@@ -9,12 +9,12 @@ import React from 'react'
 import { Provider } from 'react-redux'
 import { Store } from 'redux'
 import {
-    GetServerSideProps,
-    GetServerSidePropsContext,
-    GetStaticProps,
-    GetStaticPropsContext,
-    NextComponentType,
-    NextPageContext,
+  GetServerSideProps,
+  GetServerSidePropsContext,
+  GetStaticProps,
+  GetStaticPropsContext,
+  NextComponentType,
+  NextPageContext,
 } from 'next'
 import context from 'react-redux/src/components/Context'
 
@@ -40,10 +40,10 @@ export const HYDRATE = '__NEXT_REDUX_WRAPPER_HYDRATE__'
 const getIsServer = () => typeof window === 'undefined'
 
 const getDeserializedState = <S extends Store>(initialState: any, {deserializeState}: Config<S> = {}) =>
-    deserializeState ? deserializeState(initialState) : initialState
+  deserializeState ? deserializeState(initialState) : initialState
 
 const getSerializedState = <S extends Store>(state: any, {serializeState}: Config<S> = {}) =>
-    serializeState ? serializeState(state) : state
+  serializeState ? serializeState(state) : state
 export declare type MakeStore<S extends Store> = (context: Context) => S
 
 export interface InitStoreOptions<S extends Store> {
@@ -56,28 +56,28 @@ let sharedClientStore: any
 
 
 const initStore = <S extends Store>({makeStore, context}: InitStoreOptions<S>): S => {
-    const createStore = () => makeStore(context)
+  const createStore = () => makeStore(context)
 
-    if (getIsServer()) {
-        const req: any = (context as NextPageContext)?.req || (context as AppContext)?.ctx?.req
-        if (req) {
-            // ATTENTION! THIS IS INTERNAL, DO NOT ACCESS DIRECTLY ANYWHERE ELSE
-            // @see https://github.com/kirill-konshin/next-redux-wrapper/pull/196#issuecomment-611673546
-            if (!req.__nextReduxWrapperStore) {
-                req.__nextReduxWrapperStore = createStore()
-            }
-            return req.__nextReduxWrapperStore
-        }
-
-        return createStore()
+  if (getIsServer()) {
+    const req: any = (context as NextPageContext)?.req || (context as AppContext)?.ctx?.req
+    if (req) {
+      // ATTENTION! THIS IS INTERNAL, DO NOT ACCESS DIRECTLY ANYWHERE ELSE
+      // @see https://github.com/kirill-konshin/next-redux-wrapper/pull/196#issuecomment-611673546
+      if (!req.__nextReduxWrapperStore) {
+        req.__nextReduxWrapperStore = createStore()
+      }
+      return req.__nextReduxWrapperStore
     }
 
-    // Memoize store if client
-    if (!sharedClientStore) {
-        sharedClientStore = createStore()
-    }
+    return createStore()
+  }
 
-    return sharedClientStore
+  // Memoize store if client
+  if (!sharedClientStore) {
+    sharedClientStore = createStore()
+  }
+
+  return sharedClientStore
 }
 
 export type Context = NextPageContext|AppContext|GetStaticPropsContext|GetServerSidePropsContext
