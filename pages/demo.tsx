@@ -1,8 +1,8 @@
-import React, {useEffect, useState} from 'react'
-import {Box, Button, Grid, Stack, Typography} from '@mui/material'
+import React, {useState} from 'react'
+import {Box, Button, Grid, IconButton, Stack, Typography} from '@mui/material'
 import {useTheme} from '@mui/material/styles'
 import {css} from '@emotion/react'
-
+import {TransitionGroup, CSSTransition} from 'react-transition-group'
 
 const dummyListCoupon: Array<TicketType> = [
   {
@@ -39,7 +39,6 @@ const dummyListCoupon: Array<TicketType> = [
   }
 ]
 
-
 interface TicketType {
   id: number,
   title: string,
@@ -66,8 +65,6 @@ const TimeDescription = ({isUsed, endTime}: { endTime: number, isUsed: boolean }
     const now = Date.now()
     const days = Math.floor(+new Date() / 1000) + 3 * 24 * 60 * 60 // 3 days
     const minus = endTime - now
-    console.log(minus)
-    console.log(days)
     if (endTime < now) {
       TextDesc = <span css={css`
         color: #ffffff;
@@ -108,14 +105,19 @@ const TimeDescription = ({isUsed, endTime}: { endTime: number, isUsed: boolean }
 }
 
 
-const Ticket = ({ticketType}: { ticketType: TicketType }) => {
+const Ticket = ({ticketType, handleRemove}: {
+  ticketType: TicketType,
+  handleRemove: () => void
+}) => {
   const theme = useTheme()
-  const [isMounted, setIsMounted] = useState(false)
+  // const [isMounted, setIsMounted] = useState(false)
+  //
+  // useEffect(() => {
+  //   setIsMounted(true)
+  // }, [])
 
-  useEffect(() => {
-    setIsMounted(true)
-  }, [])
-
+  // opacity: ${isMounted ? '1' : '0'};
+  // scale: ${(isMounted ? '1' : '0.5')};
 
   const description = `<div style="display: flex; flex-direction: column">
     <p style="font-size: 14px; color:${theme.palette.jade.dark};font-weight: bold;margin: 0">{t('16')}</p>
@@ -126,25 +128,36 @@ const Ticket = ({ticketType}: { ticketType: TicketType }) => {
     border: 1px solid ${theme.palette.smoke.light};
     border-radius: 10px;
     transition: all .5s ease-in-out;
-    opacity: ${isMounted ? '1' : '0'};
-    scale: ${(isMounted ? '1' : '0.5')};
   `}>
-    <p css={css`
+    <Stack direction="row" justifyContent="space-between">
+      <p css={css`
       display: flex;
       align-items: flex-end;
       margin-bottom: 8px;
       margin-top: 10px`}>
-      <span css={css`
+        <span css={css`
         font-size: 14px;
         color: ${theme.palette.primary.main};
         line-height: 16px;
       `}>￥</span>
-      <span css={css`
+        <span css={css`
         font-size: 36px;
         font-weight: bold;
         color: ${theme.palette.primary.main}
       `}>{ticketType.discountPrice}</span>
-    </p>
+      </p>
+      <IconButton
+        css={css`
+            height: 24px;
+            width: 24px;
+            border: 1px solid #E2E2E2;
+            border-radius: 50%;
+          `}
+        onClick={handleRemove}
+      >
+        x
+      </IconButton>
+    </Stack>
     <Typography
       className={'ggj-wt'}
       variant={'body1'}
@@ -161,34 +174,83 @@ const Ticket = ({ticketType}: { ticketType: TicketType }) => {
 const Demo = () => {
   const theme = useTheme()
   const [listCoupon, setListCoupon] = useState<Array<TicketType>>(dummyListCoupon)
-  const [isHideBtn, setIsHideBtn] = useState<boolean>(false)
+  // const [isHideBtn, setIsHideBtn] = useState<boolean>(false)
 
   const handleClick = () => {
+    
     const newCoupon = {
-      id: 1,
+      id: (new Date()).getTime(),
       title: 'new新規会員登録クーポン',
       description: '新規会員限定の割引クーポンです。スキジャン会員登録後、30日間利用できます。どのサービスにもご利用頂けますが、クーポンの使用回数は1回限りです。',
       endTime: 1668262997932,
       discountPrice: 5000,
       isUsed: false
     }
-
+    
     setListCoupon([...listCoupon, newCoupon])
-    setIsHideBtn(true)
+    // setIsHideBtn(true)
+  }
+
+  const handleRemoveCoupon = (id: number) => {
+    const newListCoupon = listCoupon.filter(i => i.id !== id)
+    setListCoupon(newListCoupon)
   }
 
 
   return (
     <Box p={6}>
-      <Grid container columns={12} spacing={4}>
-        {listCoupon.map(p => (
-          <Grid item xs={12} md={6} lg={4} key={p.id}>
-            <Ticket ticketType={p}/>
-          </Grid>
-        ))}
+      <Grid
+        container
+        columns={12} 
+        spacing={4}
+        css={css`
+          .ticket {
+            transition: 0.4s ease-in-out;
+          }
+          .ticket-enter {
+            opacity: 0;
+            scale: 0.5;
+          }
+          .ticket-enter-active {
+            opacity: 1;
+            scale: 1;
+          }
+          .ticket-appear {
+            opacity: 0;
+            scale: 0.5;
+          }
+          .ticket-appear-active {
+            opacity: 1;
+            scale: 1;
+          }
+          .ticket-exit {
+            opacity: 1;
+            scale: 1;
+          }
+          .ticket-exit-active {
+            opacity: 0;
+            scale: 0.5;
+          }
+
+        `}
+      >
+        <TransitionGroup exit={true} appear={true} enter={true} component={null}>
+          {listCoupon.map(p => (
+            <CSSTransition
+              in={true}
+              key={p.id}
+              timeout={500}
+              classNames="ticket"
+              onEnter={(x: any, isAppearing: boolean) => console.log('==========x===========', x, isAppearing)}
+            >
+              <Grid item xs={12} md={6} lg={4} key={p.id} className="ticket">
+                <Ticket ticketType={p} handleRemove={() => handleRemoveCoupon(p.id)}/>
+              </Grid>
+            </CSSTransition>
+          ))}
+        </TransitionGroup>
       </Grid>
-
-
+      
       <Button
         variant="outlined"
         onClick={handleClick}
@@ -199,7 +261,6 @@ const Demo = () => {
           justify-content: center;
           align-content: center;
           transition: .3s ease-in-out;
-          opacity: ${isHideBtn ? '0' : '1'};
         `}
       >
         Add new coupon
