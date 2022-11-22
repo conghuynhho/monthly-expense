@@ -1,5 +1,5 @@
 import React, {useState} from 'react'
-import {Box, Button, Grid, IconButton, Stack, Typography} from '@mui/material'
+import {Box, Button, Collapse, Grid, IconButton, Stack, Typography} from '@mui/material'
 import {useTheme} from '@mui/material/styles'
 import {css} from '@emotion/react'
 import {TransitionGroup, CSSTransition} from 'react-transition-group'
@@ -203,50 +203,12 @@ const Demo = () => {
         container
         columns={12} 
         spacing={4}
-        css={css`
-          .ticket {
-            transition: 0.4s ease-in-out;
-          }
-          .ticket-enter {
-            opacity: 0;
-            scale: 0.5;
-          }
-          .ticket-enter-active {
-            opacity: 1;
-            scale: 1;
-          }
-          .ticket-appear {
-            opacity: 0;
-            scale: 0.5;
-          }
-          .ticket-appear-active {
-            opacity: 1;
-            scale: 1;
-          }
-          .ticket-exit {
-            opacity: 1;
-            scale: 1;
-          }
-          .ticket-exit-active {
-            opacity: 0;
-            scale: 0.5;
-          }
-
-        `}
       >
-        <TransitionGroup exit={true} appear={true} enter={true} component={null}>
+        <TransitionGroup component={null}>
           {listCoupon.map(p => (
-            <CSSTransition
-              in={true}
-              key={p.id}
-              timeout={500}
-              classNames="ticket"
-              onEnter={(x: any, isAppearing: boolean) => console.log('==========x===========', x, isAppearing)}
-            >
-              <Grid item xs={12} md={6} lg={4} key={p.id} className="ticket">
-                <Ticket ticketType={p} handleRemove={() => handleRemoveCoupon(p.id)}/>
-              </Grid>
-            </CSSTransition>
+            <Grid item xs={12} md={6} lg={4} key={p.id}>
+              <Ticket ticketType={p} handleRemove={() => handleRemoveCoupon(p.id)}/>
+            </Grid>
           ))}
         </TransitionGroup>
       </Grid>
