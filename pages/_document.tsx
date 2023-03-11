@@ -6,7 +6,7 @@ const renderStatic = async (html: DocumentInitialProps['html']) => {
   if (html === undefined) {
     throw new Error('did you forget to return html from renderToString?')
   }
-  const { extractCritical } = createEmotionServer(cache)
+  const {extractCritical} = createEmotionServer(cache)
   const { ids, css } = extractCritical(html)
 
   return { html, ids, css }
@@ -31,7 +31,6 @@ class MyDocument extends Document {
       ),
     }
   }
-
 
   render() {
     return (

@@ -1,9 +1,9 @@
 import '../styles/globals.css'
 import type { AppProps } from 'next/app'
-import {ThemeProvider, createTheme} from '@mui/material/styles'
+import {ThemeProvider, createTheme, ThemeOptions} from '@mui/material/styles'
 import themeConfig from '../theme.config'
 
-const theme = createTheme(themeConfig.light)
+const theme = createTheme(themeConfig.light as ThemeOptions)
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
