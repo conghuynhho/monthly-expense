@@ -1,3 +1,4 @@
+import {Box} from '@mui/material'
 // import type { NextPage } from 'next'
 // import Head from 'next/head'
 // import Image from 'next/image'
@@ -77,9 +78,9 @@
 
 const Home = () => {
   return (
-    <div>
+    <Box mt={8}>
       <h1>Home</h1>
-    </div>
+    </Box>
   )
 }
 

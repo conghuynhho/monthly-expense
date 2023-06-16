@@ -7,9 +7,9 @@ const theme = createTheme(themeConfig.light as ThemeOptions)
 
 function MyApp({ Component, pageProps }: AppProps) {
   return (
-    <ThemeProvider theme={theme}>
+    // <ThemeProvider theme={theme}>
       <Component {...pageProps} />
-    </ThemeProvider>
+    // </ThemeProvider>
   )
 }
 
